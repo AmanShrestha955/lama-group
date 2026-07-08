@@ -34,7 +34,7 @@ export default function Loader() {
       })
       // bronze line sweeps — starts as first letter lands
       .to(".loader-line", {
-        width: 260,
+        width: 350,
         duration: 1.0,
         ease: "expo.out",
       })
@@ -93,7 +93,7 @@ export default function Loader() {
       <div className="loader-line h-px w-0 bg-linear-to-r from-transparent via-bronze to-transparent" />
 
       {/* counter */}
-      <span className="loader-counter opacity-0 font-body font-light text-xs tracking-[0.22em] uppercase text-mist">
+      <span className="loader-counter opacity-0 font-body font-light text-[0.85rem] tracking-[0.22em] uppercase text-mist">
         0
       </span>
     </div>

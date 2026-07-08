@@ -1,3 +1,4 @@
+// Team.tsx
 import TeamCard from "./TeamCard";
 
 const TEAM = [
@@ -30,13 +31,19 @@ const TEAM = [
       "Founder twice over. Deep expertise in media distribution, content platforms, and risk product design.",
   },
 ];
+
 export default function Team() {
   return (
-    <section className="px-12 py-14 flex-1 w-full bg-ink-2 flex flex-col gap-3 perspective-distant">
+    <section
+      className="px-6 py-12 md:px-12 md:py-14 flex-1 w-full bg-ink-2 flex flex-col gap-3"
+      style={{ perspective: "1000px" }}
+    >
       <h1 className="font-body font-light text-[0.75rem] uppercase tracking-[0.2rem] text-bronze">
         The Team
       </h1>
-      <div className="flex flex-row flex-1">
+
+      {/* mobile: 1 col, tablet: 2 col, desktop: 4 col */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 flex-1">
         {TEAM.map((item, index) => (
           <TeamCard
             key={index}
@@ -44,7 +51,7 @@ export default function Team() {
             fullName={item.fullname}
             detail={item.detail}
             position={item.position}
-            borderLeft={index !== 0}
+            index={index}
           />
         ))}
       </div>

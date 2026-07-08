@@ -1,4 +1,5 @@
 import About from "@/components/About";
+import Contact from "@/components/Contact";
 import Hero from "@/components/Hero";
 import Numbers from "@/components/Numbers";
 import ScrollingBanner from "@/components/ScrollingBanner";
@@ -15,6 +16,7 @@ export default function Home() {
       <Numbers />
       <Statement />
       <Team />
+      <Contact />
     </div>
   );
 }

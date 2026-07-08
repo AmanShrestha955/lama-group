@@ -1,3 +1,4 @@
+// TeamCard.tsx
 "use client";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useRef } from "react";
@@ -7,7 +8,7 @@ type TeamCardProps = {
   fullName: string;
   position: string;
   detail: string;
-  borderLeft: boolean;
+  index: number; // ← replaced borderLeft with index, more flexible
 };
 
 export default function TeamCard({
@@ -15,7 +16,7 @@ export default function TeamCard({
   fullName,
   position,
   detail,
-  borderLeft,
+  index,
 }: TeamCardProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -46,30 +47,65 @@ export default function TeamCard({
     <motion.div
       data-cursor-hover
       ref={ref}
+      // ── disable 3D tilt on touch devices ──
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className={`relative group flex flex-col h-full
-          px-18 py-12
-          hover:bg-ink hover:z-10
-          hover:shadow-2xl hover:shadow-black
-          hover:scale-105
-          transition-[background,shadow,scale] duration-500
-          ${borderLeft && "border-l border-l-rule"}`}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
+      className={`
+        relative group flex flex-col
+        px-8 py-10 md:px-12 md:py-12 lg:px-18
+        hover:bg-ink hover:z-10
+        hover:shadow-2xl hover:shadow-black
+        transition-[background,box-shadow] duration-500
+        ${
+          /* mobile — border-t on all except first */
+          index !== 0 ? "border-t border-t-rule" : ""
+        }
+
+  ${
+    /* tablet — border-t on index 2,3 (second row) */
+    index >= 2 ? "sm:border-t sm:border-t-rule" : "sm:border-t-0"
+  }
+
+  ${
+    /* tablet — border-l on odd index (right card in each row) */
+    index % 2 !== 0 ? "sm:border-l sm:border-l-rule" : "sm:border-l-0"
+  }
+
+  ${/* desktop — no border-t at all */ "lg:border-t-0"}
+
+  ${
+    /* desktop — border-l on all except first */
+    index !== 0 ? "lg:border-l lg:border-l-rule" : "lg:border-l-0"
+  }
+      `}
     >
-      <h1 className="font-display font-light text-[5rem] text-bronze-dark/60">
+      {/* initial letter */}
+      <h1 className="font-display font-light text-[3.5rem] md:text-[5rem] text-bronze-dark/60 group-hover:text-bronze-dark transition-colors duration-500">
         {firstLetter}
       </h1>
-      <h2 className="font-display font-normal text-[1.25rem] text-smoke">
+
+      {/* name */}
+      <h2 className="font-display font-normal text-[1.1rem] md:text-[1.25rem] text-smoke">
         {fullName}
       </h2>
-      <p className="font-body text-[0.75rem] tracking-[0.15rem] text-bronze uppercase pt-2">
+
+      {/* position */}
+      <p className="font-body text-[0.7rem] md:text-[0.75rem] tracking-[0.15rem] text-bronze uppercase pt-2">
         {position}
       </p>
-      <p className="font-body text-[0.90rem] text-mist pt-4 tracking-[0.05rem]">
+
+      {/* detail */}
+      <p className="font-body text-[0.85rem] md:text-[0.90rem] text-mist pt-4 tracking-[0.05rem]">
         {detail}
       </p>
-      <div className="absolute bottom-0 left-0 h-px w-0 group-hover:w-full group-hover:opacity-100 opacity-10 bg-linear-to-r from-bronze-dark/60 to-bronze-dark transition-[background,opacity,width] duration-500"></div>
+
+      {/* bottom line */}
+      <div className="absolute bottom-0 left-0 h-0.5 w-0 group-hover:w-full group-hover:opacity-100 opacity-10 bg-linear-to-r from-bronze-dark/60 to-bronze-dark transition-[opacity,width] duration-500" />
     </motion.div>
   );
 }

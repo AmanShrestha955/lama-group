@@ -67,6 +67,30 @@ textarea,
   user-select: none;
 }
 
+/* ── textarea scrollbar ── */
+textarea {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-bronze-dark) transparent;
+}
+
+/* webkit browsers (Chrome, Safari, Edge) */
+textarea::-webkit-scrollbar {
+  width: 3px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: var(--color-bronze-dark);
+  border-radius: 0px; /* sharp corners — matches site language */
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+  background: var(--color-bronze);
+}
+
 @keyframes movesideways {
   0% {
     transform: translateX(0);
