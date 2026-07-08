@@ -7,28 +7,28 @@ const TEAM = [
     fullname: "Binamra Bhattarai",
     position: "executive advisor, insurance & risk management",
     detail:
-      "Fifteen years across capital markets and venture. Previously led growth investments across South and Southeast Asia.",
+      "Providing deep expertise in insurance, risk management, and strategic advisory across the portfolio.",
   },
   {
     firstLetter: "A",
     fullname: "Aman Shrestha",
     position: "Chief technology officer",
     detail:
-      "Former operator and CTO. Specializes in deep tech and enterprise software across emerging markets.",
+      "Responsible for technological innovation, digital transformation, and product development across the group's ventures.",
   },
   {
     firstLetter: "N",
     fullname: "Nitesh Lama",
     position: "Founder, chairman & CEO",
     detail:
-      "Trained in structured finance in London and Singapore. Leads portfolio strategy and LP relations.",
+      "Leading the group's strategic vision, business development, and long-term expansion. The founding force behind Lama Group",
   },
   {
     firstLetter: "K",
     fullname: "Karan Lama",
     position: "chief financial officer",
     detail:
-      "Founder twice over. Deep expertise in media distribution, content platforms, and risk product design.",
+      "Leading financial planning, investment strategy, and capital allocation to build ventures on sound financial foundations.",
   },
 ];
 
