@@ -11,7 +11,6 @@ const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 
 export default function Hero() {
-  //new commit
   const containerRef = useRef<HTMLElement>(null);
 
   const rawX = useMotionValue(0);
