@@ -1,10 +1,10 @@
-import About from "@/components/About";
-import Contact from "@/components/Contact";
-import Hero from "@/components/Hero";
-import Numbers from "@/components/Numbers";
-import ScrollingBanner from "@/components/ScrollingBanner";
-import Statement from "@/components/Statement";
-import Team from "@/components/Team";
+import About from "@/components/Home/About";
+import Contact from "@/components/Home/Contact";
+import Hero from "@/components/Home/Hero";
+import Numbers from "@/components/Home/Numbers";
+import ScrollingBanner from "@/components/Home/ScrollingBanner";
+import Statement from "@/components/Home/Statement";
+import Team from "@/components/Home/Team";
 
 export default function Home() {
   return (

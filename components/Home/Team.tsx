@@ -1,5 +1,7 @@
-// Team.tsx
-import TeamCard from "./TeamCard";
+"use client";
+import { useEffect } from "react";
+import TeamCard from "../TeamCard";
+import { gsap, ScrollTrigger } from "@/utils/gsap";
 
 const TEAM = [
   {
@@ -33,17 +35,40 @@ const TEAM = [
 ];
 
 export default function Team() {
+  useEffect(() => {
+    const tl = gsap.timeline({
+      scrollTrigger: { trigger: ".team", start: "top 60%" },
+    });
+
+    tl.from(".team-label", {
+      opacity: 0,
+      y: 30,
+      duration: 0.5,
+      ease: "power3.out",
+    }).from(".cards div", {
+      y: -50,
+      scale: 1.1,
+      opacity: 0,
+      stagger: 0.12,
+      duration: 0.7,
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+    };
+  }, []);
+
   return (
     <section
-      className="px-6 py-12 md:px-12 md:py-14 flex-1 w-full bg-ink-2 flex flex-col gap-3"
+      className="team px-6 py-12 md:px-12 md:py-14 flex-1 w-full bg-ink-2 flex flex-col gap-3 z-2"
       style={{ perspective: "1000px" }}
     >
-      <h1 className="font-body font-light text-[0.75rem] uppercase tracking-[0.2rem] text-bronze">
+      <h1 className="team-label font-body font-light text-[0.75rem] uppercase tracking-[0.2rem] text-bronze">
         The Team
       </h1>
 
       {/* mobile: 1 col, tablet: 2 col, desktop: 4 col */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 flex-1">
+      <div className="cards grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 flex-1">
         {TEAM.map((item, index) => (
           <TeamCard
             key={index}

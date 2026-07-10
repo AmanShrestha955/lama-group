@@ -1,5 +1,94 @@
+"use client";
+import { gsap, ScrollTrigger, SplitText } from "@/utils/gsap";
+import { useEffect } from "react";
 export default function About() {
   const SECTORS = ["Finance", "Technology", "Media", "Insurance"];
+
+  useEffect(() => {
+    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+
+    // about section
+    const aboutTl = gsap.timeline({
+      scrollTrigger: { trigger: ".about", start: "bottom 60%" },
+      onComplete: () => {
+        if (isDesktop) quoteTl.play();
+      },
+    });
+
+    const aboutParagraphs = new SplitText(".about-detail p", {
+      type: "lines",
+    });
+
+    aboutTl
+      .from(".about", { opacity: 0, y: 30, duration: 0.5, ease: "power3.out" })
+      .from(".about-detail h2", {
+        opacity: 0,
+        x: 50,
+        duration: 0.5,
+        ease: "power3.out",
+      })
+      .from(aboutParagraphs.lines, {
+        stagger: 0.1,
+        opacity: 0,
+        x: 50,
+        duration: 0.6,
+        ease: "power3.out",
+      });
+
+    // quote section
+    const quoteParagraphs = new SplitText(".quote h1", { type: "lines" });
+    // ── quote timeline ──
+    // created first so aboutTl can reference it in onComplete
+    const quoteTl = gsap.timeline({
+      // on mobile/tablet — own scrollTrigger, plays when quote enters view
+      // on desktop — paused, aboutTl fires it via onComplete
+      paused: isDesktop,
+      scrollTrigger: !isDesktop
+        ? {
+            trigger: ".quote",
+            start: "top 75%",
+          }
+        : undefined,
+    });
+    quoteTl
+      .from(".quote", {
+        opacity: 0,
+        duration: 0.25,
+        ease: "power3.out",
+      })
+      .from(quoteParagraphs.lines, {
+        stagger: 0.1,
+        opacity: 0,
+        x: 50,
+        duration: 0.7,
+        ease: "power3.out",
+      })
+      .from(".quote h2", {
+        opacity: 0,
+        x: 50,
+        duration: 0.35,
+        ease: "power3.out",
+      });
+
+    // sector section
+
+    const sectorTl = gsap.timeline({
+      scrollTrigger: { trigger: ".sector", start: "top 60%" },
+    });
+    sectorTl.from(".sector", {
+      stagger: 0.3,
+      opacity: 0,
+      x: 50,
+      duration: 0.75,
+      ease: "power3.out",
+    });
+
+    return () => {
+      aboutParagraphs.revert();
+      quoteParagraphs.revert();
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+    };
+  }, []);
 
   return (
     <section
@@ -15,30 +104,30 @@ export default function About() {
     >
       {/* ── left column ── */}
       <div className="flex flex-col flex-1 gap-5">
-        <h1 className="font-body uppercase text-bronze tracking-[0.15rem] text-sm">
+        <h1 className="about font-body uppercase text-bronze tracking-[0.15rem] text-sm">
           About
         </h1>
 
-        <div className="flex flex-col flex-1 gap-5">
+        <div className=" about-detail flex flex-col flex-1 gap-5">
           <h2 className="font-display capitalize italic text-smoke text-2xl sm:text-3xl">
             Building for the long term.
           </h2>
-          <p className="font-body first-letter:uppercase lowercase font-light text-smoke pt-3.5">
+          <p className="font-body font-light text-smoke">
             Lama Holdings is an emerging venture and investment group founded
             with a clear and singular vision to build sustainable, high-impact
             businesses that endure across generations.
           </p>
-          <p className="font-body first-letter:uppercase lowercase font-light text-smoke">
+          <p className="font-body font-light text-smoke">
             We are in the early stages, deliberately so. Currently focused on
             investment activities and identifying the right opportunities, we
             take the time to understand each sector before we commit capital or
             build.
           </p>
-          <p className="font-body first-letter:uppercase lowercase font-light text-smoke">
+          <p className="font-body font-light text-smoke">
             Our ambition is to construct a diversified portfolio of companies
             from the ground up and take each one as far as it can go.
           </p>
-          <p className="font-body first-letter:uppercase lowercase font-light text-smoke">
+          <p className="font-body font-light text-smoke">
             Rooted in the Kathmandu Valley, our perspective is shaped by a place
             that has built and rebuilt for centuries where craftsmanship,
             patience, and long horizons are not strategy, but inheritance.
@@ -52,6 +141,7 @@ export default function About() {
               data-cursor-hover
               key={index}
               className={`
+                sector
                 relative overflow-hidden
                 group flex items-center
                 py-5 sm:py-6 text-mist text-sm
@@ -81,7 +171,7 @@ export default function About() {
 
       {/* ── right column — quote ── */}
       <div
-        className="
+        className=" quote
         font-display flex flex-col gap-5 text-smoke
         border-l border-l-bronze
         flex-1

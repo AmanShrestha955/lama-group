@@ -1,6 +1,38 @@
+"use client";
+import { gsap, ScrollTrigger, SplitText } from "@/utils/gsap";
+import { useEffect } from "react";
 export default function Statement() {
+  useEffect(() => {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".statement",
+        start: "top 60%",
+      },
+    });
+    const statementText = new SplitText(".statement-text", { type: "chars" });
+    tl.from(statementText.chars, {
+      stagger: 0.02,
+      y: 50,
+      opacity: 0,
+      duration: 0.7,
+      ease: "power3.out",
+    }).from(".statement h1", {
+      y: -300,
+      ease: "power3.out",
+      scrollTrigger: {
+        scrub: 2,
+        end: "bottom 60%",
+        trigger: ".statement",
+      },
+    });
+
+    return () => {
+      statementText.revert();
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+    };
+  }, []);
   return (
-    <section className="relative w-full flex items-center justify-center">
+    <section className=" statement relative w-full flex items-center justify-center">
       {/* background IPO text */}
       <h1
         className="
@@ -24,7 +56,7 @@ export default function Statement() {
       "
       >
         <h2
-          className="
+          className=" statement-text
           font-display text-smoke
           text-xl sm:text-2xl lg:text-3xl
           leading-relaxed

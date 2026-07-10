@@ -1,5 +1,6 @@
 "use client";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { gsap } from "@/utils/gsap";
 
 export default function Contact() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -11,22 +12,54 @@ export default function Contact() {
     el.style.height = el.scrollHeight + "px";
   };
 
+  useEffect(() => {
+    const tl = gsap.timeline({
+      scrollTrigger: { trigger: ".contact", start: "top 60%" },
+    });
+    tl.from(".label", {
+      opacity: 0,
+      y: 20,
+      duration: 0.5,
+      ease: "power3.out",
+    })
+      .from(".title", {
+        opacity: 0,
+        y: 20,
+        ease: "power3.out",
+        duration: 0.5,
+      })
+      .from(".form div", {
+        opacity: 0,
+        x: 30,
+        stagger: 0.2,
+        duration: 0.6,
+        ease: "power3.out",
+      })
+      .from(".details div", {
+        opacity: 0,
+        x: 30,
+        stagger: 0.2,
+        duration: 0.7,
+        ease: "power3.out",
+      });
+  }, []);
+
   return (
-    <section className="flex-1 flex flex-col gap-2 px-6 py-16 md:px-12 md:py-24 lg:py-30 bg-ink">
+    <section className=" contact flex-1 flex flex-col gap-2 px-6 py-16 md:px-12 md:py-24 lg:py-30 bg-ink">
       {/* label */}
-      <h1 className="text-bronze uppercase font-body tracking-[0.2rem] text-[0.75rem]">
+      <h1 className="label text-bronze uppercase font-body tracking-[0.2rem] text-[0.75rem]">
         Get in Touch
       </h1>
 
       {/* title */}
-      <h2 className="text-2xl md:text-3xl font-display text-smoke italic">
+      <h2 className="title text-2xl md:text-3xl font-display text-smoke italic">
         Start a conversation.
       </h2>
 
       {/* main grid — stacks on mobile, side by side on desktop */}
       <div className="flex-1 flex flex-col lg:flex-row gap-12 lg:gap-20 pt-4 md:pt-0">
         {/* ── form ── */}
-        <form className="flex flex-1 flex-col gap-6 pt-4 md:pt-7.5">
+        <form className="form flex flex-1 flex-col gap-6 pt-4 md:pt-7.5">
           {/* name */}
           <div className="relative flex flex-col">
             <input
@@ -124,7 +157,7 @@ export default function Contact() {
         {/* ── details ── */}
         <div className="flex flex-col flex-1">
           {/* on mobile — 2 col grid for details, on desktop — single col */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1">
+          <div className="details grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1">
             <div className="py-6 md:py-8 flex flex-col border-y border-y-rule">
               <h1 className="font-body text-[0.75rem] text-bronze tracking-[0.2rem] uppercase">
                 Group
