@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { gsap } from "@/utils/gsap";
+import Button from "../Button";
 
 export default function Contact() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -134,23 +135,13 @@ export default function Contact() {
 
           {/* submit */}
           <div className="relative">
-            <button
+            <Button
+              text="Send Message"
               onClick={(e) => {
-                e.stopPropagation();
                 e.preventDefault();
+                e.stopPropagation();
               }}
-              className="
-                group relative uppercase text-bronze
-                font-semibold font-body text-[0.75rem]
-                border border-bronze
-                px-8 py-3 md:px-10.5 md:py-4
-                hover:text-ink duration-500 transition-[color]
-                w-full md:w-auto
-              "
-            >
-              <p className="relative z-2">Send Message</p>
-              <div className="absolute w-0 h-full bg-bronze top-0 left-0 z-1 group-hover:w-full transition-[width] duration-500 ease-out" />
-            </button>
+            />
           </div>
         </form>
 
