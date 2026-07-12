@@ -29,8 +29,8 @@ Aman Shrestha leads technology and digital infrastructure at Lama Group, respons
 Trained in Computer Science, he brings a builder's instinct to every layer of the group's technology decisions from architecture to execution. His work spans full-stack product development, and the application of modern technology to whatever domain the group moves into next.
 
 As Lama Group expands across finance, technology, media, and insurance, Aman's focus remains consistent build systems and products that are designed not just for today's needs, but for the scale the group intends to reach.`,
-    linkedin: "#",
-    email: "aman@lamagroup.com.np",
+    linkedin: "https://www.linkedin.com/in/aman-shrestha-047328321/",
+    email: "amanshrestha016@gmail.com",
   },
   {
     initial: "K",
