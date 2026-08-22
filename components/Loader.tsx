@@ -1,43 +1,27 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { SplitText, loaderTl, masterTl } from "@/utils/gsap";
+import { useRef } from "react";
+import { SplitText, useGSAP, gsap } from "@/utils/gsap";
 import { useLoader } from "@/utils/LoaderProvider";
 
 export default function Loader() {
   const { setIsLoaded } = useLoader();
-  const wrapRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!wrapRef.current) return;
-
+  useGSAP(() => {
     const split = new SplitText(".loader-wordmark", { type: "chars" });
 
-    // ── main timeline ──
-    loaderTl
-      .from(
-        split.chars,
-        {
-          y: "110%",
-          opacity: 0,
-          stagger: 0.04,
-          duration: 0.7,
-          ease: "expo.out",
-        },
-        "loader",
-      )
-      // counter fades in — same time as line
-      .to(".loader-counter", {
-        opacity: 1,
-        duration: 0.4,
-        ease: "power2.out",
-      })
-      // bronze line sweeps — starts as first letter lands
-      .to(".loader-line", {
-        width: 350,
-        duration: 1.0,
-        ease: "expo.out",
-      })
+    const tl = gsap.timeline({ onComplete: () => setIsLoaded(true) });
+
+    tl.from(split.chars, {
+      y: "110%",
+      opacity: 0,
+      stagger: 0.04,
+      duration: 0.7,
+      ease: "expo.out",
+    })
+      .to(".loader-counter", { opacity: 1, duration: 0.4 })
+      .to(".loader-line", { width: 260, duration: 1.0, ease: "expo.out" })
       .to(
         ".loader-counter",
         {
@@ -45,42 +29,40 @@ export default function Loader() {
           snap: { innerText: 1 },
           duration: 1.0,
           ease: "power2.out",
+          onUpdate() {
+            const el = document.querySelector(".loader-counter");
+            if (el) el.textContent = Math.round(Number(el.textContent)) + "%";
+          },
         },
         "<",
       )
-      // hold briefly
       .to({}, { duration: 0.5 })
-      // exit — whole loader lifts and fades
-      .to(wrapRef.current, {
+      .to(".loader-wrap", {
         opacity: 0,
-        scale: 1.05,
+        scale: 1.03,
         duration: 0.8,
         ease: "power2.inOut",
       })
       .to(
-        wrapRef.current,
+        ".loader-wrap",
         {
           y: "-100%",
           duration: 0.8,
           ease: "power2.in",
-          onComplete: () => {
-            setIsLoaded(true);
-            masterTl.play();
-          },
         },
         "<0.2",
       );
-    loaderTl.play();
+
     return () => {
-      loaderTl.kill();
+      tl.kill();
       split.revert();
     };
-  }, [setIsLoaded]);
+  });
 
   return (
     <div
-      ref={wrapRef}
-      className="fixed inset-0 z-99999 bg-ink flex flex-col items-center justify-center gap-8 pointer-events-none"
+      ref={containerRef}
+      className="loader-wrap fixed inset-0 z-99999 bg-ink flex flex-col items-center justify-center gap-8 pointer-events-none"
     >
       {/* wordmark */}
       <div className="flex overflow-hidden">

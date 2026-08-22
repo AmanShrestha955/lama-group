@@ -1,7 +1,6 @@
 "use client";
-import { useEffect } from "react";
 import TeamCard from "../TeamCard";
-import { gsap, ScrollTrigger } from "@/utils/gsap";
+import { gsap, useGSAP } from "@/utils/gsap";
 
 const TEAM = [
   {
@@ -35,27 +34,34 @@ const TEAM = [
 ];
 
 export default function Team() {
-  useEffect(() => {
+  useGSAP(() => {
     const tl = gsap.timeline({
       scrollTrigger: { trigger: ".team", start: "top 60%" },
     });
 
-    tl.from(".team-label", {
-      opacity: 0,
-      y: 30,
-      duration: 0.5,
-      ease: "power3.out",
-    }).from(".cards div", {
-      y: -50,
-      scale: 1.1,
-      opacity: 0,
-      stagger: 0.12,
-      duration: 0.7,
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
+    tl.fromTo(
+      ".team-label",
+      {
+        opacity: 0,
+        y: 30,
+        duration: 0.5,
+        ease: "power3.out",
+      },
+      {
+        opacity: 1,
+        y: 0,
+      },
+    ).fromTo(
+      ".cards div",
+      {
+        y: -50,
+        scale: 1.1,
+        opacity: 0,
+        stagger: 0.12,
+        duration: 0.7,
+      },
+      { opacity: 1, y: 0, scale: 1, stagger: 0.12, ease: "power3.out" },
+    );
   }, []);
 
   return (

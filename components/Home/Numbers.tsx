@@ -1,6 +1,5 @@
 "use client";
-import { useEffect } from "react";
-import { gsap, ScrollTrigger } from "@/utils/gsap";
+import { gsap, useGSAP } from "@/utils/gsap";
 
 export default function Numbers() {
   const NUMBERS = [
@@ -34,7 +33,7 @@ export default function Numbers() {
     },
   ];
 
-  useEffect(() => {
+  useGSAP(() => {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: ".numbers",
@@ -43,13 +42,21 @@ export default function Numbers() {
     });
 
     // ── all blocks fade in with stagger ──
-    tl.from(".number-block", {
-      opacity: 0,
-      y: 30,
-      stagger: 0.12,
-      duration: 0.7,
-      ease: "power3.out",
-    })
+    tl.fromTo(
+      ".number-block",
+      {
+        opacity: 0,
+        y: 30,
+        stagger: 0.12,
+        duration: 0.7,
+        ease: "power3.out",
+      },
+      {
+        opacity: 1,
+        y: 0,
+        stagger: 0.12,
+      },
+    )
 
       // ── count up numbers after blocks appear ──
       .to(
@@ -63,8 +70,6 @@ export default function Numbers() {
         },
         "<0.3",
       );
-
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
   }, []);
 
   return (

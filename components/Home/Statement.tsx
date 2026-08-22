@@ -1,8 +1,7 @@
 "use client";
-import { gsap, ScrollTrigger, SplitText } from "@/utils/gsap";
-import { useEffect } from "react";
+import { gsap, SplitText, useGSAP } from "@/utils/gsap";
 export default function Statement() {
-  useEffect(() => {
+  useGSAP(() => {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: ".statement",
@@ -10,26 +9,40 @@ export default function Statement() {
       },
     });
     const statementText = new SplitText(".statement-text", { type: "chars" });
-    tl.from(statementText.chars, {
-      stagger: 0.02,
-      y: 50,
-      opacity: 0,
-      duration: 0.7,
-      ease: "power3.out",
-    }).from(".statement h1", {
-      y: -300,
-      ease: "power3.out",
-      scrollTrigger: {
-        scrub: 2,
-        end: "bottom 60%",
-        trigger: ".statement",
+    tl.fromTo(
+      statementText.chars,
+      {
+        stagger: 0.02,
+        y: 50,
+        opacity: 0,
+        duration: 0.7,
+        ease: "power3.out",
       },
-    });
-
-    return () => {
-      statementText.revert();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
+      {
+        opacity: 1,
+        y: 0,
+        stagger: 0.02,
+      },
+    ).fromTo(
+      ".statement h1",
+      {
+        y: -300,
+        ease: "power3.out",
+        scrollTrigger: {
+          scrub: 2,
+          end: "bottom 60%",
+          trigger: ".statement",
+        },
+      },
+      {
+        y: 0,
+        scrollTrigger: {
+          scrub: 2,
+          end: "bottom 60%",
+          trigger: ".statement",
+        },
+      },
+    );
   }, []);
   return (
     <section className=" statement relative w-full flex items-center justify-center">

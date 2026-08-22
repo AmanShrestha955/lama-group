@@ -1,36 +1,42 @@
 "use client";
-import { masterTl } from "@/utils/gsap";
-import { useEffect, useState } from "react";
+import { useGSAP, gsap } from "@/utils/gsap";
+import { useLoader } from "@/utils/LoaderProvider";
+import { useRef, useEffect, useState } from "react";
 
 export default function NavScroll({ children }: { children: React.ReactNode }) {
   const [scrolled, setScrolled] = useState(false);
+  const { isLoaded } = useLoader();
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    console.log("nav label time:", masterTl.labels); // ← add this
-    console.log("nav element:", document.querySelector(".nav-scroll"));
-
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll, { passive: true });
-
-    masterTl.from(
-      ".nav-scroll",
-      {
-        opacity: 0,
-        y: -50,
-        duration: 0.8,
-        ease: "power2.out",
-      },
-      "nav",
-    );
-
-    console.log("after register:", masterTl.getChildren()); // ← and this
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-    };
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useGSAP(
+    () => {
+      if (!navRef.current) return;
+
+      gsap.fromTo(
+        navRef.current,
+        { opacity: 0, y: -20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power3.out",
+          delay: isLoaded ? 0 : 4.5, // ← matches loader duration
+          clearProps: "all", // ← clears inline styles after animation
+        },
+      );
+    },
+    { scope: navRef },
+  );
 
   return (
     <nav
+      ref={navRef}
       className={` nav-scroll
       fixed top-0 left-0 right-0 z-500
       flex items-center justify-between

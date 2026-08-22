@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { gsap } from "@/utils/gsap";
+import { useRef } from "react";
+import { gsap, useGSAP } from "@/utils/gsap";
 import Button from "../Button";
 
 export default function Contact() {
@@ -13,36 +13,66 @@ export default function Contact() {
     el.style.height = el.scrollHeight + "px";
   };
 
-  useEffect(() => {
+  useGSAP(() => {
     const tl = gsap.timeline({
       scrollTrigger: { trigger: ".contact", start: "top 60%" },
     });
-    tl.from(".label", {
-      opacity: 0,
-      y: 20,
-      duration: 0.5,
-      ease: "power3.out",
-    })
-      .from(".title", {
+    tl.fromTo(
+      ".label",
+      {
         opacity: 0,
         y: 20,
-        ease: "power3.out",
         duration: 0.5,
-      })
-      .from(".form div", {
-        opacity: 0,
-        x: 30,
-        stagger: 0.2,
-        duration: 0.6,
         ease: "power3.out",
-      })
-      .from(".details div", {
-        opacity: 0,
-        x: 30,
-        stagger: 0.2,
-        duration: 0.7,
-        ease: "power3.out",
-      });
+      },
+      {
+        opacity: 1,
+        y: 0,
+      },
+    )
+      .fromTo(
+        ".title",
+        {
+          opacity: 0,
+          y: 20,
+          ease: "power3.out",
+          duration: 0.5,
+        },
+        {
+          opacity: 1,
+          y: 0,
+        },
+      )
+      .fromTo(
+        ".form div",
+        {
+          opacity: 0,
+          x: 30,
+          stagger: 0.2,
+          duration: 0.6,
+          ease: "power3.out",
+        },
+        {
+          opacity: 1,
+          x: 0,
+          stagger: 0.2,
+        },
+      )
+      .fromTo(
+        ".details div",
+        {
+          opacity: 0,
+          x: 30,
+          stagger: 0.2,
+          duration: 0.7,
+          ease: "power3.out",
+        },
+        {
+          opacity: 1,
+          x: 0,
+          stagger: 0.2,
+        },
+      );
   }, []);
 
   return (

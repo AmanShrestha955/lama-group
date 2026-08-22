@@ -1,7 +1,10 @@
+"use client";
+import { MEMBERS } from "@/utils/Members";
+import { gsap, useGSAP } from "@/utils/gsap";
 import ProfileCard from "../ProfileCard";
-import { MEMBERS } from "./OrgTree";
 
 export default function Profiles() {
+  useGSAP(() => {});
   return (
     <section className="flex flex-col w-full bg-ink px-12">
       <div className="flex w-full py-12">

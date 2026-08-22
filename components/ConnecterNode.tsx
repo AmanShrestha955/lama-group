@@ -44,6 +44,7 @@ export default function ConnecterNode({
           textSize={textSize}
           letter={initial}
           preview={preview}
+          hovered={hovered}
         />
         {/* name */}
         <h1

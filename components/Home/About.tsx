@@ -1,15 +1,14 @@
 "use client";
-import { gsap, ScrollTrigger, SplitText } from "@/utils/gsap";
-import { useEffect } from "react";
+import { gsap, SplitText, useGSAP } from "@/utils/gsap";
 export default function About() {
   const SECTORS = ["Finance", "Technology", "Media", "Insurance"];
 
-  useEffect(() => {
+  useGSAP(() => {
     const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
 
     // about section
     const aboutTl = gsap.timeline({
-      scrollTrigger: { trigger: ".about", start: "bottom 60%" },
+      scrollTrigger: { trigger: ".about", start: "bottom 70%" },
       onComplete: () => {
         if (isDesktop) quoteTl.play();
       },
@@ -20,20 +19,39 @@ export default function About() {
     });
 
     aboutTl
-      .from(".about", { opacity: 0, y: 30, duration: 0.5, ease: "power3.out" })
-      .from(".about-detail h2", {
-        opacity: 0,
-        x: 50,
-        duration: 0.5,
-        ease: "power3.out",
-      })
-      .from(aboutParagraphs.lines, {
-        stagger: 0.1,
-        opacity: 0,
-        x: 50,
-        duration: 0.6,
-        ease: "power3.out",
-      });
+      .fromTo(
+        ".about",
+        { opacity: 0, y: 30, duration: 0.5, ease: "power3.out" },
+        { opacity: 1, y: 0 },
+      )
+      .fromTo(
+        ".about-detail h2",
+        {
+          opacity: 0,
+          x: 50,
+          duration: 0.5,
+          ease: "power3.out",
+        },
+        {
+          opacity: 1,
+          x: 0,
+        },
+      )
+      .fromTo(
+        aboutParagraphs.lines,
+        {
+          stagger: 0.1,
+          opacity: 0,
+          x: 50,
+          duration: 0.4,
+          ease: "power3.out",
+        },
+        {
+          opacity: 1,
+          stagger: 0.1,
+          x: 0,
+        },
+      );
 
     // quote section
     const quoteParagraphs = new SplitText(".quote h1", { type: "lines" });
@@ -51,43 +69,62 @@ export default function About() {
         : undefined,
     });
     quoteTl
-      .from(".quote", {
-        opacity: 0,
-        duration: 0.25,
-        ease: "power3.out",
-      })
-      .from(quoteParagraphs.lines, {
-        stagger: 0.1,
-        opacity: 0,
-        x: 50,
-        duration: 0.7,
-        ease: "power3.out",
-      })
-      .from(".quote h2", {
-        opacity: 0,
-        x: 50,
-        duration: 0.35,
-        ease: "power3.out",
-      });
+      .fromTo(
+        ".quote",
+        {
+          opacity: 0,
+          duration: 0.25,
+          ease: "power3.out",
+        },
+        {
+          opacity: 1,
+        },
+      )
+      .fromTo(
+        quoteParagraphs.lines,
+        {
+          stagger: 0.1,
+          opacity: 0,
+          x: 50,
+          duration: 0.7,
+          ease: "power3.out",
+        },
+        {
+          opacity: 1,
+          stagger: 0.1,
+          x: 0,
+        },
+      )
+      .fromTo(
+        ".quote h2",
+        {
+          opacity: 0,
+          x: 50,
+          duration: 0.35,
+          ease: "power3.out",
+        },
+        {
+          opacity: 1,
+          x: 0,
+        },
+      );
 
     // sector section
 
     const sectorTl = gsap.timeline({
       scrollTrigger: { trigger: ".sector", start: "top 60%" },
     });
-    sectorTl.from(".sector", {
-      stagger: 0.3,
-      opacity: 0,
-      x: 50,
-      duration: 0.75,
-      ease: "power3.out",
-    });
-
-    return () => {
-      aboutParagraphs.revert();
-      quoteParagraphs.revert();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
+    sectorTl.fromTo(
+      ".sector",
+      {
+        stagger: 0.3,
+        opacity: 0,
+        x: 50,
+        duration: 0.75,
+        ease: "power3.out",
+      },
+      { opacity: 1, x: 0, stagger: 0.3 },
+    );
   }, []);
 
   return (

@@ -1,9 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import NavScroll from "./NavScroll";
 import Link from "next/link";
-import { gsap } from "@/utils/gsap";
-import { AnimatePresence, motion } from "motion/react";
+import { gsap, useGSAP } from "@/utils/gsap";
+import { motion } from "motion/react";
 import { usePathname } from "next/navigation";
 
 const links = [
@@ -13,40 +13,56 @@ const links = [
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
+  const [visible, setVisible] = useState(false);
   const pathname = usePathname();
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+  // ── contextSafe wraps functions so GSAP tracks and cleans them up ──
+  const { contextSafe } = useGSAP({ scope: containerRef });
+
+  // ── mobile menu open ──
+  const handleOpen = contextSafe(() => {
+    setVisible(true);
+    setOpen(true);
+    gsap.fromTo(
+      ".mobile-link",
+      { y: 40, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        stagger: 0.08,
+        duration: 0.6,
+        ease: "power3.out",
+        delay: 0.2,
+      },
+    );
+  });
+
+  // ── mobile menu close ──
+  const handleClose = contextSafe(() => {
+    if (!visible) return;
     setOpen(false);
+    gsap.to(".mobile-link", {
+      y: 40,
+      opacity: 0,
+      stagger: 0.05,
+      duration: 0.4,
+      ease: "power3.in",
+      onComplete: () => setVisible(false),
+    });
+  });
+
+  // close on route change
+  useEffect(() => {
+    handleClose();
   }, [pathname]);
 
+  // body scroll lock
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) {
-      gsap.to(".mobile-link", {
-        y: 40,
-        opacity: 0,
-        stagger: 0.08,
-        duration: 0.6,
-        ease: "power3.out",
-        delay: 0.2,
-      });
-      return;
-    }
-    gsap.from(".mobile-link", {
-      y: 40,
-      opacity: 0,
-      stagger: 0.08,
-      duration: 0.6,
-      ease: "power3.out",
-      delay: 0.2,
-    });
   }, [open]);
 
   return (
@@ -60,68 +76,61 @@ export default function NavBar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
-          <Link
-            href="/"
-            className="font-body font-light text-[0.68rem] tracking-[0.2em] uppercase text-mist hover:text-smoke transition-colors duration-300"
-          >
-            Home
-          </Link>
-          <Link
-            href="/team"
-            className="font-body font-light text-[0.68rem] tracking-[0.2em] uppercase text-mist hover:text-smoke transition-colors duration-300"
-          >
-            Team
-          </Link>
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="font-body font-light text-[0.68rem] tracking-[0.2em] uppercase text-mist hover:text-smoke transition-colors duration-300"
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
 
-        {/* mobile hamburger */}
         <button
-          onClick={() => setOpen(!open)}
-          className="md:hidden flex flex-col gap-1.5 p-1 group"
+          onClick={() => (open ? handleClose() : handleOpen())}
+          className="md:hidden flex flex-col gap-1.5 p-1"
           aria-label="Toggle menu"
         >
           <span
-            className={`block h-px w-6 bg-smoke transition-all duration-300 ease-in-out origin-center
+            className={`block h-px w-6 bg-smoke transition-all duration-300 origin-center
             ${open ? "rotate-45 translate-y-1.25" : ""}`}
           />
           <span
-            className={`block h-px bg-smoke transition-all duration-300 ease-in-out
+            className={`block h-px bg-smoke transition-all duration-300
             ${open ? "w-6 -rotate-45 translate-y-[-1.5px]" : "w-4"}`}
           />
         </button>
       </NavScroll>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
-            className="fixed inset-0 z-499 bg-ink flex flex-col items-center justify-center gap-10 md:hidden"
-          >
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="mobile-link font-display font-light text-5xl tracking-widest text-smoke hover:text-bronze transition-colors duration-300"
-                onClick={() => setOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
 
-            {/* bottom detail */}
-            <div className="absolute bottom-10 left-[4vw] right-[4vw] flex justify-between items-center border-t border-rule pt-6">
-              <span className="font-body font-light text-[0.65rem] tracking-[0.2em] uppercase text-mist">
-                Lama Holdings
-              </span>
-              <span className="font-display font-light italic text-sm text-bronze">
-                Zero to IPO.
-              </span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {visible && (
+        <motion.div
+          ref={containerRef}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: open ? 1 : 0 }}
+          className="fixed inset-0 z-499 bg-ink flex flex-col items-center justify-center gap-10 md:hidden"
+        >
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="mobile-link font-display font-light text-5xl tracking-widest text-smoke hover:text-bronze transition-colors duration-300"
+              onClick={handleClose}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          <div className="absolute bottom-10 left-[4vw] right-[4vw] flex justify-between items-center border-t border-rule pt-6">
+            <span className="font-body font-light text-[0.65rem] tracking-[0.2em] uppercase text-mist">
+              Lama Holdings
+            </span>
+            <span className="font-display font-light italic text-sm text-bronze">
+              Zero to IPO.
+            </span>
+          </div>
+        </motion.div>
+      )}
     </>
   );
 }
