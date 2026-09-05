@@ -17,7 +17,7 @@ export default function Profiles() {
           <ProfileCard
             key={index}
             initial={item.initial}
-            url={item.photo}
+            photo={item.photo}
             currentProfileNumber={index + 1}
             detail={item.bio}
             email={item.email}
@@ -25,7 +25,7 @@ export default function Profiles() {
             name={item.name}
             title={item.title}
             totalProfileNumber={MEMBERS.length}
-            imagePosition={index % 2 ? "left" : "right"}
+            imagePosition={index % 2 ? "right" : "left"}
           />
         ))}
       </div>

@@ -1,8 +1,9 @@
 "use client";
 import { Mail } from "lucide-react";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
+import SlideIn from "./animation/SideIn";
 type ProfileCardProps = {
-  url?: string;
+  photo?: StaticImageData;
   initial: string;
   totalProfileNumber: number;
   currentProfileNumber: number;
@@ -21,7 +22,7 @@ const corner = [
   "right-2 bottom-2 border-r border-b border-r-bronze border-b-bronze",
 ];
 export default function ProfileCard({
-  url,
+  photo,
   initial,
   totalProfileNumber,
   currentProfileNumber,
@@ -33,31 +34,40 @@ export default function ProfileCard({
   imagePosition = "left",
 }: ProfileCardProps) {
   return (
-    <div className="flex flex-row gap-16 py-20 border-y border-y-rule items-center">
-      {imagePosition === "right" && (
-        <div className="relative w-73.5 h-92 aspect-4/5">
-          {corner.map((item, index) => (
-            <div className={`absolute size-3 ${item}`} key={index}></div>
-          ))}
-          <div className="w-full h-full bg-bronze/8 hover:bg-bronze/13 transition-colors duration-300 absolute"></div>
-          {url ? (
-            <Image
-              src={url}
-              alt={name}
-              width={294}
-              height={368}
-              className="object-cover w-full h-full"
-            />
-          ) : (
-            <div className="w-full h-full flex justify-center items-center bg-ink-2">
-              <span className="font-display font-light text-[8rem] text-bronze-dark/40">
-                {initial}
-              </span>
-            </div>
-          )}
-        </div>
-      )}
-      <div className="flex flex-col items-start flex-1">
+    <div
+      className={`flex ${imagePosition === "left" ? "flex-row" : "flex-row-reverse"} gap-16 py-20 border-y border-y-rule items-center overflow-hidden`}
+    >
+      <SlideIn
+        start="top 60%"
+        duration={1}
+        direction={imagePosition === "left" ? "left" : "right"}
+        className="relative w-73.5 h-92 aspect-4/5"
+      >
+        {corner.map((item, index) => (
+          <div className={`absolute size-3 ${item}`} key={index}></div>
+        ))}
+        <div className="w-full h-full bg-bronze/8 hover:bg-bronze/13 transition-colors duration-300 absolute"></div>
+        {photo ? (
+          <Image
+            src={photo}
+            alt={name}
+            width={294}
+            height={368}
+            className="object-cover w-full h-full"
+          />
+        ) : (
+          <div className="w-full h-full flex justify-center items-center bg-ink-2">
+            <span className="font-display font-light text-[8rem] text-bronze-dark/40">
+              {initial}
+            </span>
+          </div>
+        )}
+      </SlideIn>
+      <SlideIn
+        duration={1}
+        direction={imagePosition === "left" ? "right" : "left"}
+        className="flex flex-col items-start flex-1"
+      >
         <p className="font-display text-mist italic text-[0.75rem]">
           0{currentProfileNumber}/0{totalProfileNumber}
         </p>
@@ -82,8 +92,10 @@ export default function ProfileCard({
             ))}
         </div>
         <div className="flex flex-row justify-start gap-4 items-center pt-9">
-          <div
-            onClick={() => window.open(linkedin, "_blank")}
+          <a
+            href={linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex justify-center items-center size-11 border  group border-rule hover:border-bronze transition-colors duration-300"
           >
             <svg
@@ -99,46 +111,20 @@ export default function ProfileCard({
               <rect x="2" y="9" width="4" height="12" />
               <circle cx="4" cy="4" r="2" />
             </svg>
-          </div>
-          <div
-            onClick={() =>
-              window.open(
-                `https://mail.google.com/mail/?view=cm&fs=1&to=${email}`,
-                "_blank",
-              )
-            }
+          </a>
+          <a
+            href={`https://mail.google.com/mail/?view=cm&fs=1&to=${email}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex justify-center items-center size-11 border  group border-rule hover:border-bronze transition-colors duration-300"
           >
             <Mail
               size={"1rem"}
               className="text-mist group-hover:text-bronze transition-colors duration-300"
             />
-          </div>
+          </a>
         </div>
-      </div>
-      {imagePosition === "left" && (
-        <div className="relative w-73.5 h-92 aspect-4/5">
-          {corner.map((item, index) => (
-            <div className={`absolute size-3 ${item}`} key={index}></div>
-          ))}
-          <div className="w-full h-full bg-bronze/8 hover:bg-bronze/13 transition-colors duration-300 absolute"></div>
-          {url ? (
-            <Image
-              src={url}
-              alt={name}
-              width={294}
-              height={368}
-              className="object-cover w-full h-full"
-            />
-          ) : (
-            <div className="w-full h-full flex justify-center items-center bg-ink-2">
-              <span className="font-display font-light text-[8rem] text-bronze-dark/40">
-                {initial}
-              </span>
-            </div>
-          )}
-        </div>
-      )}
+      </SlideIn>
     </div>
   );
 }

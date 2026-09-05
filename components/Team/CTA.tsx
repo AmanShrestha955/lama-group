@@ -1,4 +1,5 @@
 "use client";
+import SlideInGroup from "../animation/SlideInGroup";
 import Button from "../Button";
 
 export default function CTA() {
@@ -9,7 +10,7 @@ export default function CTA() {
           TEAM
         </h1>
       </div>
-      <div className="flex flex-col justify-center items-center z-2">
+      <SlideInGroup className="flex flex-col justify-center items-center z-2">
         <p className="font-body uppercase text-[0.75rem] tracking-[0.2rem] text-bronze pb-8">
           We Are Hiring
         </p>
@@ -31,7 +32,7 @@ export default function CTA() {
             lamagroup.official@gmail.com · Kathmandu, Nepal
           </p>
         </div>
-      </div>
+      </SlideInGroup>
     </section>
   );
 }
